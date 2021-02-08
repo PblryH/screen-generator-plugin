@@ -19,6 +19,7 @@ class SourceRootRepositoryImpl @Inject constructor(
     override fun findCodeSourceRoot(module: Module, sourceSet: String) =
         projectStructure.findSourceRoots(module).firstOrNull {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
+            if (pathTrimmed.contains("src/main/aidl", true)) return@firstOrNull false
             pathTrimmed.contains("src", true)
                     && pathTrimmed.contains(sourceSet)
                     && !pathTrimmed.contains("assets", true)
@@ -28,6 +29,7 @@ class SourceRootRepositoryImpl @Inject constructor(
     override fun findResourcesSourceRoot(module: Module) =
         projectStructure.findSourceRoots(module).first {
             val pathTrimmed = it.path.removeModulePathPrefix(module)
+            if (pathTrimmed.contains("src/main/aidl", true)) return@first false
             pathTrimmed.contains("src", true)
                     && pathTrimmed.contains("main", true)
                     && pathTrimmed.contains("res", true)
